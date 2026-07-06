@@ -31,7 +31,7 @@ public class TestInput1 {
                 break;  // ถ้าอ่านสำเร็จ ให้ออกจากloop
             } catch (InputMismatchException e) {
                 // ถ้าผู้ใช้ป้อนไม่ใช่ตัวเลข จะเข้า catch
-                System.out.println("⚠️  โปรดป้อนอายุเป็นตัวเลขเท่านั้น");
+                System.out.println("โปรดป้อนอายุเป็นตัวเลขเท่านั้น");
                 sc.nextLine(); // เคลียร์บัฟเฟอร์ (ลบข้อมูลที่ผิดออก)
             }
         }
@@ -43,12 +43,12 @@ public class TestInput1 {
                 score = sc.nextDouble();
                 // ตรวจสอบว่าคะแนนอยู่ในช่วงที่ถูกต้องหรือไม่
                 if (score < 0 || score > 100) {
-                    System.out.println("⚠️  คะแนนต้องอยู่ระหว่าง 0 ถึง 100 กรุณาป้อนใหม่");
+                    System.out.println("คะแนนต้องอยู่ระหว่าง 0 ถึง 100 กรุณาป้อนใหม่");
                     continue; // กลับไปถามใหม่ โดยไม่ break
                 }
                 break; // ถ้าถูกต้องก็ออกจากลูป
             } catch (InputMismatchException e) {
-                System.out.println("⚠️  โปรดป้อนคะแนนเป็นตัวเลข (เช่น 85.5)");
+                System.out.println("โปรดป้อนคะแนนเป็นตัวเลข (เช่น 85.5)");
                 sc.nextLine(); // เคลียร์บัฟเฟอร์
             }
         }

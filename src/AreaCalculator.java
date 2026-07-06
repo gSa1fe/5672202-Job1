@@ -61,7 +61,7 @@ public class AreaCalculator {
 
         } else {
             // ถ้าผู้ใช้ป้อนตัวเลขอื่นที่ไม่ใช่ 1 หรือ 2
-            System.out.println("\n⚠️  คำเตือน: กรุณาเลือก 1 หรือ 2 เท่านั้น");
+            System.out.println("\nคำเตือน: กรุณาเลือก 1 หรือ 2 เท่านั้น");
         }
 
         // ปิด Scanner
