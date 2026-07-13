@@ -1,71 +1,76 @@
+// รับชื่อ-นามสกุลจากผู้ใช้ แล้วแสดงผลลัพธ์การจัดการ String หลายรูปแบบ
+
 import java.util.Scanner;
 
 public class TestString1 {
+
+    // เก็บเส้นคั่นไว้เป็น constant กันการพิมพ์ "=====" ซ้ำหลายที่
+    // static final = ค่าคงที่ ใช้ร่วมกันได้ทั้งคลาส แก้ไขไม่ได้หลังประกาศ
+    private static final String DIVIDER = "=====================================";
+
     public static void main(String[] args) {
-        // สร้างตัวรับค่าจาก Keybord
-        Scanner sc = new Scanner(System.in);
+        // try-with-resources: Scanner จะถูก .close() ให้อัตโนมัติ
+        // เมื่อออกจากบล็อก try (ไม่ต้องเขียน sc.close() เองแบบเดิม
+        // และปิดให้แน่นอนแม้เกิด exception ระหว่างทาง)
+        try (Scanner sc = new Scanner(System.in)) {
+            printHeader();
 
-        // ตัวแปรเก็บชื่อกับนามสกุล
-        String firstName;
-        String lastName;
+            System.out.print("กรุณาป้อนชื่อ (ไม่รวมนามสกุล): ");
+            // .trim() ตัดช่องว่างหน้า-หลังที่ผู้ใช้พิมพ์เผลอเกินมาออก
+            String firstName = sc.nextLine().trim();
 
-        // ขึ้นหัวโปรแกรม
-        System.out.println("=====================================");
+            System.out.print("กรุณาป้อนนามสกุล: ");
+            String lastName = sc.nextLine().trim();
+
+            // ส่งค่าที่รับมาไปประมวลผลและแสดงผลในเมธอดแยก
+            // ทำให้ main() อ่านง่าย
+            printResult(firstName, lastName);
+        }
+
+        System.out.println("\nจบโปรแกรม");
+    }
+
+    /**
+     * แสดงหัวโปรแกรม แยกออกมาเป็นเมธอดเพื่อไม่ให้ main() รก
+     * และถ้าจะแก้หัวโปรแกรมทีหลัง ก็มาแก้ที่จุดเดียว
+     */
+
+    private static void printHeader() {
+        System.out.println(DIVIDER);
         System.out.println("   โปรแกรมจัดการข้อความด้วย String");
-        System.out.println("=====================================");
+        System.out.println(DIVIDER);
+    }
 
-        // รับชื่อ อาจจะมีช่องว่างได้เลยใช้ nextLine()
-        System.out.print("กรุณาป้อนชื่อ: ");
-        firstName = sc.nextLine();
-
-        // รับนามสกุล
-        System.out.print("กรุณาป้อนนามสกุล: ");
-        lastName = sc.nextLine();
-
-        // 1. ต่อชื่อกับนามสกุล โดยเว้นช่องว่างตรงกลาง
-        //    fullName จะได้ประมาณ Nattapong Somdee
+    private static void printResult(String firstName, String lastName) {
+        // 1. ต่อชื่อกับนามสกุล คั่นด้วยช่องว่าง
         String fullName = firstName + " " + lastName;
 
-        // 2. ความยาวของชื่อเต็ม ทั้งหมดกี่ตัวอักษร รวมช่องว่างด้วย
-        int length = fullName.length();
+        // 3. ตัวอักษรตัวแรกของชื่อ
+        // ternary (เงื่อนไข ? ค่าเมื่อจริง : ค่าเมื่อเท็จ) แทน if-else 5 บรรทัด
+        // ถ้า firstName ว่าง -> ใช้ ' ' กันโปรแกรม error จาก charAt(0)
+        // ถ้าไม่ว่าง -> ดึงตัวอักษรตำแหน่งที่ 0 มาใช้
+        char firstChar = firstName.isEmpty() ? ' ' : firstName.charAt(0);
 
-        // 3. ตัวแรกของชื่อ ใช้ charAt(0) ดึงตัวที่ตำแหน่ง 0 ออกมา
-        //    แต่ต้องเช็คก่อนว่าชื่อไม่ใช่ค่าว่าง จะได้ไม่พัง
-        char firstChar;
-        if (firstName.length() > 0) {
-            firstChar = firstName.charAt(0);
-        } else {
-            firstChar = ' '; // ถ้าไม่ใส่ชื่อก็ให้เป็นช่องว่างไป
-        }
+        // 6. ดึง 3 ตัวแรกของชื่อ
+        // Math.min(3, firstName.length()) หาว่าจะตัดกี่ตัวโดยไม่เกินความยาวจริง
+        // เช่นชื่อยาว 5 ตัว -> ตัดที่ 3 / ชื่อยาว 2 ตัว -> ตัดที่ 2 (เอาทั้งหมด) ไม่ error แน่นอน
+        String firstThree = firstName.substring(0, Math.min(3, firstName.length()));
 
-        // 4. แปลงชื่อเต็มเป็นตัวพิมพ์ใหญ่ทั้งหมด
-        String upperFull = fullName.toUpperCase();
-
-        // 5. แปลงชื่อเต็มเป็นตัวพิมพ์เล็กทั้งหมด
-        String lowerFull = fullName.toLowerCase();
-
-        // 6. ดึง 3 ตัวแรกของชื่อมาแสดง
-        //    ใช้ substring(0, 3) คือเอาตัวที่ 0,1,2 มา
-        //    แต่ถ้าชื่อสั้นกว่า 3 ตัว ก็ใช้ชื่อที่มีอยู่เลย ไม่ต้องไปดัก error
-        String firstThree;
-        if (firstName.length() >= 3) {
-            firstThree = firstName.substring(0, 3);
-        } else {
-            firstThree = firstName; // ถ้าสั้นก็เอาทั้งหมด
-        }
-
-        // ----- แสดงผลตามโจทย์ต้องการ -----
         System.out.println("\n==============");
         System.out.println("ชื่อเต็ม: " + fullName);
-        System.out.println("ความยาวของชื่อเต็ม: " + length);
+
+        // 2. ความยาวของชื่อเต็ม (นับทุกตัวอักษรรวมช่องว่างตรงกลาง)
+        System.out.println("ความยาวของชื่อเต็ม (นับทุกตัวอักษรรวมช่องว่างตรงกลาง): " + fullName.length());
+
         System.out.println("ตัวอักษรตัวแรกของชื่อ: " + firstChar);
-        System.out.println("ชื่อเต็มตัวพิมพ์ใหญ่: " + upperFull);
-        System.out.println("ชื่อเต็มตัวพิมพ์เล็ก: " + lowerFull);
+
+        // 4. แปลงเป็นตัวพิมพ์ใหญ่ทั้งหมด
+        System.out.println("ชื่อเต็มตัวพิมพ์ใหญ่: " + fullName.toUpperCase());
+
+        // 5. แปลงเป็นตัวพิมพ์เล็กทั้งหมด
+        System.out.println("ชื่อเต็มตัวพิมพ์เล็ก: " + fullName.toLowerCase());
+
         System.out.println("ชื่อ 3 ตัวแรก: " + firstThree);
         System.out.println("==============");
-
-        // ปิด Scanner
-        sc.close();
-        System.out.println("\nจบโปรแกรม");
     }
 }
